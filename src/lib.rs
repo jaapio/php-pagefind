@@ -82,6 +82,20 @@ impl PhpPagefindIndex {
         }
     }
 
+    pub fn add_directory(&mut self, path: String, pattern: Option<String>) -> bool {
+        let response = get_runtime().block_on(
+                self.inner.add_directory(path, pattern)
+        );
+
+        match response {
+            Ok(_) => true,
+            Err(e) => {
+                eprintln!("Error adding directory: {}", e);
+                false
+            }
+        }
+    }
+
     pub fn write_files(&mut self, output_directory: String) -> bool {
         let response = get_runtime().block_on(self.inner.write_files(
             Some(output_directory)
