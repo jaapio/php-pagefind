@@ -11,7 +11,16 @@ ENV LIBCLANG_PATH=/usr/lib/x86_64-linux-gnu
 
 WORKDIR /app
 
-# Copy source code and manifest
+# Copy only Cargo.toml and Cargo.lock first to cache dependencies
+COPY Cargo.toml Cargo.lock* ./
+
+# Create a dummy src/lib.rs file to compile dependencies
+RUN mkdir -p src && \
+    echo 'fn main() { println!("Dummy implementation"); }' > src/lib.rs && \
+    cargo build --release || true && \
+    rm -rf src
+
+# Now copy the real source code
 COPY . .
 
 # Build the project in release mode
@@ -26,14 +35,14 @@ RUN mkdir -p /usr/local/lib/php/extensions && \
     php -i | grep "extension_dir => /" | awk '{print $3}' > /extension_dir.txt
 
 # Copy the compiled library from the builder
-COPY --from=builder /app/target/release/libphp_pagefind.so /tmp/
+COPY --from=builder /app/target/release/libpagefind.so /tmp/
 # Move to the correct directory using the path we saved
 RUN mkdir -p $(cat /extension_dir.txt) && \
-    cp /tmp/libphp_pagefind.so $(cat /extension_dir.txt)/php_pagefind.so && \
-    rm /tmp/libphp_pagefind.so /extension_dir.txt
+    cp /tmp/libpagefind.so $(cat /extension_dir.txt)/pagefind.so && \
+    rm /tmp/libpagefind.so /extension_dir.txt
 
 # Enable the extension by creating a config file
-RUN echo "extension=php_pagefind" > /usr/local/etc/php/conf.d/php_pagefind.ini
+RUN echo "extension=pagefind" > /usr/local/etc/php/conf.d/pagefind.ini
 
 # Set default command
 CMD ["php", "-m"]

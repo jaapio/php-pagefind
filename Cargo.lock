@@ -2012,6 +2012,15 @@ dependencies = [
 
 [[package]]
 name = "pagefind"
+version = "0.1.0"
+dependencies = [
+ "ext-php-rs",
+ "pagefind 1.3.0",
+ "tokio",
+]
+
+[[package]]
+name = "pagefind"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5f4c1bacb19363ec8f8e916d2aa068ba34f61f1f7268439de2989874b408681f"
@@ -2182,16 +2191,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67eabc2ef2a60eb7faa00097bd1ffdb5bd28e62bf39990626a582201b7a754e5"
 dependencies = [
  "siphasher 1.0.1",
-]
-
-[[package]]
-name = "php-pagefind"
-version = "0.1.0"
-dependencies = [
- "ext-php-rs",
- "futures",
- "pagefind",
- "tokio",
 ]
 
 [[package]]
