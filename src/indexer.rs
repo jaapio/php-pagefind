@@ -1,3 +1,4 @@
+use ext_php_rs::binary::Binary;
 use ext_php_rs::prelude::*;
 use ext_php_rs::exception::PhpException;
 use pagefind::options::PagefindServiceConfig;
@@ -6,6 +7,7 @@ use pagefind::api::{PagefindIndex};
 use crate::exception::PagefindException;
 use crate::service_config::PhpPagefindServiceConfig;
 use crate::response::PhpPagefindResponse;
+use crate::file::PhpPagefindFile;
 use crate::get_runtime;
 
 #[php_class]
@@ -76,6 +78,32 @@ impl PhpPagefindIndex {
                 metadata: Some(format!("{:?}", metadata)),
             }),
             Err(e) => Err(PhpException::from_class::<PagefindException>(format!("Error writing files: {}", e))),
+        }
+    }
+
+    pub fn get_files(&mut self) -> Result<Vec<PhpPagefindFile>, PhpException> {
+        match get_runtime().block_on(self.inner.get_files()) {
+            Ok(files) => {
+                let mut result = Vec::new();
+
+                for file in files {
+                    // Convert PathBuf to String, handling potential conversion errors
+                    let filename = match file.filename.to_str() {
+                        Some(s) => s.to_string(),
+                        None => return Err(PhpException::from_class::<PagefindException>(
+                            "Invalid UTF-8 in filename".to_string()
+                        )),
+                    };
+
+                    result.push(PhpPagefindFile {
+                        filename: filename,
+                        contents: Binary::from(file.contents)
+                    });
+                }
+
+                Ok(result)
+            },
+            Err(e) => Err(PhpException::from_class::<PagefindException>(format!("Error getting files: {}", e))),
         }
     }
 }

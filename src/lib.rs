@@ -10,12 +10,14 @@ pub mod exception;
 pub mod service_config;
 pub mod response;
 pub mod indexer;
+pub mod file;
 
 // Import the classes we need for module registration
 use exception::PagefindException;
 use service_config::PhpPagefindServiceConfig;
 use response::PhpPagefindResponse;
 use indexer::PhpPagefindIndex;
+use file::PhpPagefindFile;
 
 // Global runtime for async operations
 pub fn get_runtime() -> &'static Runtime {
@@ -43,5 +45,6 @@ pub fn get_module(module: ModuleBuilder) -> ModuleBuilder {
         .class::<PhpPagefindResponse>()
         .class::<PhpPagefindIndex>()
         .class::<PagefindException>()
+        .class::<PhpPagefindFile>()
         .info_function(php_module_info)
 }

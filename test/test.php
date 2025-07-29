@@ -48,7 +48,12 @@ try {
     echo "Writing index files to: $outputDir\n";
 
     try {
-        $response = $indexer->writeFiles($outputDir);
+        foreach ($indexer->getFiles() as $file) {
+            file_put_contents(
+                $outputDir . '/' . $file->getFileName(),
+                $file->getContents()
+            );
+        }
         echo "Success: " . ($response->isSuccess() ? "Yes" : "No") . "\n";
         echo "Message: " . $response->getMessage() . "\n";
         if ($metadata = $response->getMetadata()) {
