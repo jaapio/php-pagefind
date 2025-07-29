@@ -1,0 +1,17 @@
+{
+    "name": "jaapio/php-pagefind",
+    "description": "PHP bindings for pagefind search library",
+    "type": "library",
+    "require-dev": {
+        "phpbench/phpbench": "^1.2"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpPagefind\\Benchmarks\\": "benchmarks/"
+        }
+    },
+    "scripts": {
+        "benchmark": "phpbench run --report=default"
+    }
+}
+

@@ -30,6 +30,14 @@ RUN cargo build --release
 FROM php:8.2-cli
 WORKDIR /app
 
+# Install zip and unzip for Composer
+RUN apt-get update && \
+    apt-get install -y zip unzip git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 # Determine PHP extension directory in the new image
 RUN mkdir -p /usr/local/lib/php/extensions && \
     php -i | grep "extension_dir => /" | awk '{print $3}' > /extension_dir.txt

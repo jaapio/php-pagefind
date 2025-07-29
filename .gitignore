@@ -1,2 +1,4 @@
 /target
-/build/pagefind
+/build/
+!/build/index.html
+/vendor
