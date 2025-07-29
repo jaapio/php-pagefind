@@ -10,15 +10,15 @@ try {
     echo "=== Testing Individual File Indexing ===\n";
     echo "Adding individual HTML file: \n";
     try {
-        $response = $indexer->add_html_file(
+        $response = $indexer->addHtmlFile(
             'individual-document',
             '/individual-page',
             '<h1>Test Page</h1><p>This is a simple test document for individual indexing.</p>'
         );
 
-        echo "Success: " . ($response->is_success() ? "Yes" : "No") . "\n";
-        echo "Message: " . $response->get_message() . "\n";
-        if ($metadata = $response->get_metadata()) {
+        echo "Success: " . ($response->isSuccess() ? "Yes" : "No") . "\n";
+        echo "Message: " . $response->getMessage() . "\n";
+        if ($metadata = $response->getMetadata()) {
             echo "Metadata: " . $metadata . "\n";
         }
     } catch (Pagefind\Exception $e) {
@@ -32,10 +32,10 @@ try {
 
     // Add all HTML files from the directory
     try {
-        $response = $indexer->add_directory($samplesDir);
-        echo "Success: " . ($response->is_success() ? "Yes" : "No") . "\n";
-        echo "Message: " . $response->get_message() . "\n";
-        if ($metadata = $response->get_metadata()) {
+        $response = $indexer->addDirectory($samplesDir);
+        echo "Success: " . ($response->isSuccess() ? "Yes" : "No") . "\n";
+        echo "Message: " . $response->getMessage() . "\n";
+        if ($metadata = $response->getMetadata()) {
             echo "Metadata: " . $metadata . "\n";
         }
     } catch (Pagefind\Exception $e) {
@@ -48,10 +48,10 @@ try {
     echo "Writing index files to: $outputDir\n";
 
     try {
-        $response = $indexer->write_files($outputDir);
-        echo "Success: " . ($response->is_success() ? "Yes" : "No") . "\n";
-        echo "Message: " . $response->get_message() . "\n";
-        if ($metadata = $response->get_metadata()) {
+        $response = $indexer->writeFiles($outputDir);
+        echo "Success: " . ($response->isSuccess() ? "Yes" : "No") . "\n";
+        echo "Message: " . $response->getMessage() . "\n";
+        if ($metadata = $response->getMetadata()) {
             echo "Metadata: " . $metadata . "\n";
         }
 
