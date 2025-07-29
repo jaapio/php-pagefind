@@ -32,7 +32,8 @@ cargo build
 // Create a configuration
 $config = new Pagefind\ServiceConfig(
     true,  // keep URL
-    true   // verbose mode
+    true,  // verbose mode
+    'en'   // fallback language (optional, defaults to 'en')
 );
 
 try {
@@ -40,19 +41,19 @@ try {
     $indexer = new Pagefind\Indexer($config);
     
     // Index an HTML string
-    $response = $indexer->add_html_file(
+    $response = $indexer->addHtmlFile(
         'document-id',
         '/page-url',
         '<h1>Page Title</h1><p>Page content for indexing</p>'
     );
     
-    // Index a directory of HTML files
-    $response = $indexer->add_directory('/path/to/html/files');
+    // Index a directory of HTML files (with optional file pattern)
+    $response = $indexer->addDirectory('/path/to/html/files', '*.html');
     
     // Write the search index to a directory
-    $response = $indexer->write_files('/path/to/output/directory');
+    $response = $indexer->writeFiles('/path/to/output/directory');
     
-    echo "Search index created successfully: " . $response->get_message();
+    echo "Search index created successfully: " . $response->getMessage();
     
 } catch (Pagefind\Exception $e) {
     echo "Error: " . $e->getMessage();
@@ -65,13 +66,13 @@ All successful operations return a `Pagefind\Response` object with:
 
 ```php
 // Check if the operation was successful
-$success = $response->is_success();
+$success = $response->isSuccess();
 
 // Get a descriptive message about the operation
-$message = $response->get_message();
+$message = $response->getMessage();
 
 // Get any metadata from the operation (returns null if no metadata)
-$metadata = $response->get_metadata();
+$metadata = $response->getMetadata();
 ```
 
 ### Exception Handling
@@ -80,7 +81,7 @@ The extension uses exceptions for error handling. All errors throw a `Pagefind\E
 
 ```php
 try {
-    $indexer->add_directory('/non/existent/path');
+    $indexer->addDirectory('/non/existent/path');
 } catch (Pagefind\Exception $e) {
     // Handle the error
     echo "Error indexing directory: " . $e->getMessage();
@@ -94,11 +95,12 @@ try {
 Configuration options for the PageFind service.
 
 ```php
-__construct(bool $keep_url, bool $verbose)
+__construct(bool $keep_url, bool $verbose, string $fallback_language = 'en')
 ```
 
 - `$keep_url`: Whether to keep the original URL in the index
 - `$verbose`: Whether to output verbose information
+- `$fallback_language`: The language to use when no language is specified (default: 'en')
 
 ### Pagefind\Indexer
 
