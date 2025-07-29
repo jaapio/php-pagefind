@@ -10,11 +10,7 @@ pub struct PhpPagefindServiceConfig {
 
 #[php_impl()]
 impl PhpPagefindServiceConfig {
-    pub fn __construct(
-        keep_url: bool,
-        verbose: bool,
-        fallback_language: Option<String>,
-    ) -> Self {
+    pub fn __construct(keep_url: bool, verbose: bool, fallback_language: Option<String>) -> Self {
         Self {
             keep_url,
             verbose,

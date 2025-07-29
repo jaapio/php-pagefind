@@ -1,23 +1,21 @@
 #![cfg_attr(windows, feature(abi_vectorcall))]
 use ext_php_rs::prelude::*;
-use ext_php_rs::{
-    info_table_end, info_table_row, info_table_start, zend::ModuleEntry,
-};
+use ext_php_rs::{info_table_end, info_table_row, info_table_start, zend::ModuleEntry};
 use tokio::runtime::Runtime;
 
 // Module declarations
 pub mod exception;
-pub mod service_config;
-pub mod response;
-pub mod indexer;
 pub mod file;
+pub mod indexer;
+pub mod response;
+pub mod service_config;
 
 // Import the classes we need for module registration
 use exception::PagefindException;
-use service_config::PhpPagefindServiceConfig;
-use response::PhpPagefindResponse;
-use indexer::PhpPagefindIndex;
 use file::PhpPagefindFile;
+use indexer::PhpPagefindIndex;
+use response::PhpPagefindResponse;
+use service_config::PhpPagefindServiceConfig;
 
 // Global runtime for async operations
 pub fn get_runtime() -> &'static Runtime {

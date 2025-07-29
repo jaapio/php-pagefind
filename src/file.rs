@@ -14,10 +14,7 @@ pub struct PhpPagefindFile {
 impl PhpPagefindFile {
     /// Create a new File instance
     pub fn __construct(filename: String, contents: Binary<u8>) -> Self {
-        Self {
-            filename,
-            contents,
-        }
+        Self { filename, contents }
     }
 
     /// Get the filename
@@ -26,5 +23,7 @@ impl PhpPagefindFile {
     }
 
     /// Get the contents
-    pub fn get_contents(&self) -> Binary<u8> { self.contents.clone().into() }
+    pub fn get_contents(&self) -> Binary<u8> {
+        self.contents.clone().into()
+    }
 }

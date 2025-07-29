@@ -1,14 +1,14 @@
 use ext_php_rs::binary::Binary;
-use ext_php_rs::prelude::*;
 use ext_php_rs::exception::PhpException;
+use ext_php_rs::prelude::*;
+use pagefind::api::PagefindIndex;
 use pagefind::options::PagefindServiceConfig;
-use pagefind::api::{PagefindIndex};
 
 use crate::exception::PagefindException;
-use crate::service_config::PhpPagefindServiceConfig;
-use crate::response::PhpPagefindResponse;
 use crate::file::PhpPagefindFile;
 use crate::get_runtime;
+use crate::response::PhpPagefindResponse;
+use crate::service_config::PhpPagefindServiceConfig;
 
 #[php_class]
 #[php(name = "Pagefind\\Indexer")]
@@ -29,16 +29,24 @@ impl PhpPagefindIndex {
 
         match PagefindIndex::new(Some(service_config)) {
             Ok(index) => Ok(Self { inner: index }),
-            Err(e) => Err(PhpException::from_class::<PagefindException>(format!("Failed to create PagefindIndex: {}", e))),
+            Err(e) => Err(PhpException::from_class::<PagefindException>(format!(
+                "Failed to create PagefindIndex: {}",
+                e
+            ))),
         }
     }
 
-    pub fn add_html_file(&mut self, source_path: String, url: String, content: String) -> Result<PhpPagefindResponse, PhpException> {
+    pub fn add_html_file(
+        &mut self,
+        source_path: String,
+        url: String,
+        content: String,
+    ) -> Result<PhpPagefindResponse, PhpException> {
         // Use Tokio runtime to handle the async function call
         let response = get_runtime().block_on(self.inner.add_html_file(
             Some(source_path.clone()),
             Some(url.clone()),
-            content
+            content,
         ));
 
         match response {
@@ -47,14 +55,20 @@ impl PhpPagefindIndex {
                 message: format!("Successfully added HTML file: {}", source_path),
                 metadata: Some(format!("{:?}", metadata)),
             }),
-            Err(e) => Err(PhpException::from_class::<PagefindException>(format!("Error adding HTML file: {}", e))),
+            Err(e) => Err(PhpException::from_class::<PagefindException>(format!(
+                "Error adding HTML file: {}",
+                e
+            ))),
         }
     }
 
-    pub fn add_directory(&mut self, path: String, pattern: Option<String>) -> Result<PhpPagefindResponse, PhpException> {
-        let response = get_runtime().block_on(
-                self.inner.add_directory(path.clone(), pattern.clone())
-        );
+    pub fn add_directory(
+        &mut self,
+        path: String,
+        pattern: Option<String>,
+    ) -> Result<PhpPagefindResponse, PhpException> {
+        let response =
+            get_runtime().block_on(self.inner.add_directory(path.clone(), pattern.clone()));
 
         match response {
             Ok(metadata) => Ok(PhpPagefindResponse {
@@ -62,14 +76,19 @@ impl PhpPagefindIndex {
                 message: format!("Successfully added directory: {}", path),
                 metadata: Some(format!("{:?}", metadata)),
             }),
-            Err(e) => Err(PhpException::from_class::<PagefindException>(format!("Error adding directory: {}", e))),
+            Err(e) => Err(PhpException::from_class::<PagefindException>(format!(
+                "Error adding directory: {}",
+                e
+            ))),
         }
     }
 
-    pub fn write_files(&mut self, output_directory: String) -> Result<PhpPagefindResponse, PhpException> {
-        let response = get_runtime().block_on(self.inner.write_files(
-            Some(output_directory.clone())
-        ));
+    pub fn write_files(
+        &mut self,
+        output_directory: String,
+    ) -> Result<PhpPagefindResponse, PhpException> {
+        let response =
+            get_runtime().block_on(self.inner.write_files(Some(output_directory.clone())));
 
         match response {
             Ok(metadata) => Ok(PhpPagefindResponse {
@@ -77,7 +96,10 @@ impl PhpPagefindIndex {
                 message: format!("Successfully wrote files to: {}", output_directory),
                 metadata: Some(format!("{:?}", metadata)),
             }),
-            Err(e) => Err(PhpException::from_class::<PagefindException>(format!("Error writing files: {}", e))),
+            Err(e) => Err(PhpException::from_class::<PagefindException>(format!(
+                "Error writing files: {}",
+                e
+            ))),
         }
     }
 
@@ -90,20 +112,25 @@ impl PhpPagefindIndex {
                     // Convert PathBuf to String, handling potential conversion errors
                     let filename = match file.filename.to_str() {
                         Some(s) => s.to_string(),
-                        None => return Err(PhpException::from_class::<PagefindException>(
-                            "Invalid UTF-8 in filename".to_string()
-                        )),
+                        None => {
+                            return Err(PhpException::from_class::<PagefindException>(
+                                "Invalid UTF-8 in filename".to_string(),
+                            ))
+                        }
                     };
 
                     result.push(PhpPagefindFile {
                         filename: filename,
-                        contents: Binary::from(file.contents)
+                        contents: Binary::from(file.contents),
                     });
                 }
 
                 Ok(result)
-            },
-            Err(e) => Err(PhpException::from_class::<PagefindException>(format!("Error getting files: {}", e))),
+            }
+            Err(e) => Err(PhpException::from_class::<PagefindException>(format!(
+                "Error getting files: {}",
+                e
+            ))),
         }
     }
 }
