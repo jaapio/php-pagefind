@@ -36,13 +36,20 @@ jobs:
           php-version: '8.2'
           coverage: none
           tools: none
-          ini-values: extension=pagefind
 
       - name: Install extension
         run: |
           EXT_DIR=$(php -i | grep "extension_dir => /" | awk '{print $3}')
           sudo cp target/debug/libpagefind.so $EXT_DIR/pagefind.so
           echo "Installed extension to: $EXT_DIR/pagefind.so"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: none
+          ini-values: extension=pagefind
 
       - name: Verify extension installation
         run: |
