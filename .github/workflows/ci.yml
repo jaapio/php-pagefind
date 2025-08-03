@@ -12,7 +12,6 @@ jobs:
         id: extdir
         run: |
           EXT_DIR=$(php -i | grep "extension_dir =>" | awk '{print $3}');
-          echo "Found PHP extension directory: $EXT_DIR";
           echo "ext_dir=${EXT_DIR}" >> "$GITHUB_OUTPUT";
       - name: Build
         run: cargo build --verbose
