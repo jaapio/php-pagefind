@@ -13,7 +13,7 @@ jobs:
       - name: Install extension
         run: |
           EXT_DIR=$(php -i | grep "extension_dir => /" | awk '{print $3}')
-          cp target/debug/libpagefind.so $EXT_DIR/pagefind.so
+          sudo cp target/debug/libpagefind.so $EXT_DIR/pagefind.so
           echo "Installed extension to: $EXT_DIR/pagefind.so"
       - name: Verify extension installation
         run: |
