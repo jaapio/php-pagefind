@@ -8,5 +8,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Find extension directory
+        run: php -i | grep "extension_dir => /"
       - name: Build
         run: cargo build --verbose
