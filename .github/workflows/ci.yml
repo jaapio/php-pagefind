@@ -9,6 +9,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Find extension directory
-        run: php -i | grep "extension_dir => /"
+        id: extdir
+        run: |
+          EXT_DIR=$(php -i | grep "extension_dir =>" | awk '{print $3}')
+          echo "Found PHP extension directory: $EXT_DIR"
+          echo "ext_dir=$EXT_DIR" >> $GITHUB_OUTPUT
       - name: Build
         run: cargo build --verbose
+      - name: Install extension
+        run: |
+          sudo cp target/debug/libpagefind.so ${{ steps.extdir.outputs.ext_dir }}/pagefind.so
+          echo "Installed extension to: ${{ steps.extdir.outputs.ext_dir }}/pagefind.so"
+      - name: Verify extension installation
+        run: |
+          php -m | grep pagefind
+          echo "Extension pagefind successfully installed"
+      - name: Run tests
+        run: php test/test.php
