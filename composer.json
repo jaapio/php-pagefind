@@ -1,9 +1,20 @@
 {
-    "name": "jaapio/php-pagefind",
+    "name": "jaapio/pagefind",
     "description": "PHP bindings for pagefind search library",
-    "type": "library",
+    "type": "php-ext",
     "require-dev": {
         "phpbench/phpbench": "^1.2"
+    },
+    "php-ext": {
+        "build-path": "pie",
+        "extension-name": "pagefind",
+        "configure-options": [
+            {
+                "name": "debug",
+                "description": "Build in debug mode",
+                "needs-value": false
+            }
+        ]
     },
     "autoload-dev": {
         "psr-4": {
