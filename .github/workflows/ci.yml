@@ -8,16 +8,38 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
       - name: Build
         run: cargo build --verbose
+
       - name: Install extension
         run: |
           EXT_DIR=$(php -i | grep "extension_dir => /" | awk '{print $3}')
           sudo cp target/debug/libpagefind.so $EXT_DIR/pagefind.so
           echo "Installed extension to: $EXT_DIR/pagefind.so"
+
       - name: Verify extension installation
         run: |
           php -m | grep pagefind || { echo "Extension not installed properly"; exit 1; }
           echo "Extension pagefind successfully installed"
+
       - name: Run tests
         run: php test/php/test.php
