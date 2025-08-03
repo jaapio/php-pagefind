@@ -11,8 +11,10 @@ jobs:
       - name: Find extension directory
         id: extdir
         run: |
-          EXT_DIR=$(php -i | grep "extension_dir =>" | awk '{print $3}');
-          echo "ext_dir=${EXT_DIR}" >> "$GITHUB_OUTPUT";
+          EXT_DIR=$(php -i | grep "extension_dir =>" | awk '{print $3}')
+          echo "Found PHP extension directory: $EXT_DIR"
+          echo "ext_dir=$EXT_DIR" >> $GITHUB_OUTPUT
+          echo "::set-output name=ext_dir::$EXT_DIR"
       - name: Build
         run: cargo build --verbose
       - name: Install extension
