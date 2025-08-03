@@ -13,7 +13,7 @@ jobs:
         run: |
           EXT_DIR=$(php -i | grep "extension_dir =>" | awk '{print $3}')
           echo "Found PHP extension directory: $EXT_DIR"
-          echo "ext_dir=$EXT_DIR" >> $GITHUB_OUTPUT
+          echo "ext_dir=${EXT_DIR}" >> "$GITHUB_OUTPUT"
       - name: Build
         run: cargo build --verbose
       - name: Install extension
@@ -22,7 +22,7 @@ jobs:
           echo "Installed extension to: ${{ steps.extdir.outputs.ext_dir }}/pagefind.so"
       - name: Verify extension installation
         run: |
-          php -m | grep pagefind
+          php -m | grep pagefind || { echo "Extension not installed properly"; exit 1; }
           echo "Extension pagefind successfully installed"
       - name: Run tests
-        run: php test/test.php
+        run: php test/php/test.php
