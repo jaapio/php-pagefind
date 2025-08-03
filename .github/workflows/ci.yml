@@ -30,11 +30,18 @@ jobs:
       - name: Build
         run: cargo build --verbose
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: none
+          ini-values: extension=pagefind
+
       - name: Install extension
         run: |
           EXT_DIR=$(php -i | grep "extension_dir => /" | awk '{print $3}')
           sudo cp target/debug/libpagefind.so $EXT_DIR/pagefind.so
-          sudo echo "extension=pagefind" > "$(php -r 'echo php_ini_loaded_file();' | xargs dirname)/conf.d/pagefind.ini"
           echo "Installed extension to: $EXT_DIR/pagefind.so"
 
       - name: Verify extension installation
