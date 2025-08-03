@@ -12,7 +12,7 @@ jobs:
         run: cargo build --verbose
       - name: Install extension
         run: |
-          EXT_DIR=$(php -i | grep "extension_dir =>" | awk '{print $3}')
+          EXT_DIR=$(php -i | grep "extension_dir => /" | awk '{print $3}')
           cp target/debug/libpagefind.so $EXT_DIR/pagefind.so
           echo "Installed extension to: $EXT_DIR/pagefind.so"
       - name: Verify extension installation
