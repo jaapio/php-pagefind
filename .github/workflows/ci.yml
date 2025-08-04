@@ -45,4 +45,4 @@ jobs:
           echo "Extension pagefind successfully installed"
 
       - name: Run tests
-        run: php test/php/test.php
+        run: php test/test.php
