@@ -6,7 +6,7 @@
         "phpbench/phpbench": "^1.2"
     },
     "php-ext": {
-        "build-path": "pie",
+        "build-path": "pagefind",
         "extension-name": "pagefind",
         "configure-options": [
             {

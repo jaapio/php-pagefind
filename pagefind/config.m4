@@ -36,7 +36,7 @@ cargo_clean:
 EOF
 
 AC_CONFIG_LINKS([
-  Cargo.toml:../Cargo.toml
-  src:../src
-  Cargo.lock:../Cargo.lock
+  Cargo.toml:Cargo.toml
+  src:src
+  Cargo.lock:Cargo.lock
 ])
